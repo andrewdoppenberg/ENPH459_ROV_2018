@@ -7,6 +7,8 @@
 #include <RH_RF95.h>
 #include <ServoTimer2.h>
 
+
+
 #define RFM95_CS 53 // Chip Select pin
 #define RFM95_RST 47 // Reset Pin
 #define RFM95_INT 19 // interrupt pin (data ready) NOTE: We need pins 20 and 21 for the IMU, so use pin 19 on the onboard MCU at least
@@ -63,6 +65,7 @@ ServoTimer2 V_MotPWM, LR_MotPWM, FR_MotPWM;
 
 
 void setup() {
+  
   // put your setup code here, to run once:
   RF95_setup();
 
@@ -99,7 +102,7 @@ void loop() {
   //Poll sensors
   extPres = analogRead(EXT_PRES); //need to add scaling factors
   intPres = analogRead(INT_PRES);
-  temp = analogRead(TEMP);
+  
   if(extPres - intPres > MAX_PRES_DIF){ //may need to replace this since we may only have an internal sensor + differential sensor
     tankPres = intPres; // well at least we know how much air is left in the tank now!
     pesFailureABORT();
@@ -108,13 +111,14 @@ void loop() {
   tankPres -= ( (curPres - prevPres) - abs(curPres - prevPres) )/2; // calculate new tank pressure on dive (no change on ascent)
   prevPres = curPres;
   */
+  temp = (5.0*analogRead(TEMP)/1023.0 - 1.25)/.005;
   
   tankPres = 1000;
-  temp = 420;
+ 
   extPres = 69+50;
   intPres = 50;
   
-  if (count/COMM_INTERVAL == 0){  
+  if (count%COMM_INTERVAL == 0){  
     if(!transmitData(temp,TEMP_DATA)){
       //data did not transmit correctly for some reason
       transmitData(temp,TEMP_DATA); // try one more time
@@ -131,6 +135,7 @@ void loop() {
       //data did not transmit correctly for some reason
       transmitData(intPres-extPres,PRES_DIFF_DATA); // try one more time
     }
+    delay(500);
   }
     
   
@@ -141,4 +146,5 @@ void loop() {
 
 
 }
+
 
