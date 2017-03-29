@@ -6,6 +6,9 @@
 #include <SPI.h>
 #include <RH_RF95.h>
 #include <ServoTimer2.h>
+#include "quaternionFilters.h"
+#include "MPU9250.h"
+#include <LiquidCrystal.h>
 
 
 
@@ -48,6 +51,13 @@ volatile long int vMotPW, lrMotPW, frMotPW;
 // previous times in microseconds for measuring pulsewidth
 volatile long int prevTimeVMot, prevTimeLRMot, prevTimeFRMot;
 
+// Pin definitions for IMU
+int intPin = 12;  // These can be changed, 2 and 3 are the Arduinos ext int pins
+int myLed  = 13;  // Set up pin 13 led for toggling
+
+MPU9250 myIMU;
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
 
 // Sensor Pins
 #define EXT_PRES A0 //external pressure sensor
@@ -61,14 +71,19 @@ volatile long int prevTimeVMot, prevTimeLRMot, prevTimeFRMot;
 long  extPres, intPres, temp, curPres, prevPres;
 long  tankPres = INIT_PRES;
 
+int roll, pitch, yaw;
+int attitude[] ={roll, pitch, yaw};
+
 ServoTimer2 V_MotPWM, LR_MotPWM, FR_MotPWM;
 
 
 void setup() {
+  lcd.begin(20, 4);
   
   // put your setup code here, to run once:
   RF95_setup();
-
+  IMU_setup();
+  
   pinMode(LED_BUILTIN, OUTPUT);
   
   //setup sensor pins
@@ -114,6 +129,7 @@ void loop() {
   temp = (5.0*analogRead(TEMP)/1023.0 - 1.25)/.005;
   
   tankPres = 1000;
+  attitudeUpdate(attitude);
  
   extPres = 69+50;
   intPres = 50;

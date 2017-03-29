@@ -7,8 +7,8 @@ void RF95_setup(){
   Serial.begin(115200);
   delay(100);
   lcd.clear();
- lcd.setCursor(0, 0);
- lcd.print("Arduino LoRa TX Test!");
+  lcd.setCursor(0, 0);
+  lcd.print("Arduino LoRa TX Test!");
  
   // manual reset
   digitalWrite(RFM95_RST, LOW);
