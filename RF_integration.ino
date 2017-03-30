@@ -6,9 +6,6 @@
 #include <SPI.h>
 #include <RH_RF95.h>
 #include <ServoTimer2.h>
-#include "quaternionFilters.h"
-#include "MPU9250.h"
-#include <LiquidCrystal.h>
 
 
 
@@ -33,12 +30,15 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 #define FR_MOTOR_OUT 6 // Foreward/Reverse control channel
 
 //Telemetry Data types
-#define COMM_INTERVAL 5 //loop interval at which data is sent up
+#define COMM_INTERVAL 20 //loop interval at which data is sent up
+#define IMU_COMM_INTERVAL 1
 #define TEMP_DATA 1
 #define PRES_DIFF_DATA 2
 #define TANK_PRES_DATA 3
 #define DEPTH_DATA 4
-
+#define ROLL_DATA 5
+#define PITCH_DATA 6
+#define YAW_DATA 7
 
 #define DEPTH_FACTOR 1 //rho*g
 
@@ -51,13 +51,6 @@ volatile long int vMotPW, lrMotPW, frMotPW;
 // previous times in microseconds for measuring pulsewidth
 volatile long int prevTimeVMot, prevTimeLRMot, prevTimeFRMot;
 
-// Pin definitions for IMU
-int intPin = 12;  // These can be changed, 2 and 3 are the Arduinos ext int pins
-int myLed  = 13;  // Set up pin 13 led for toggling
-
-MPU9250 myIMU;
-LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
-
 
 // Sensor Pins
 #define EXT_PRES A0 //external pressure sensor
@@ -68,22 +61,17 @@ LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 #define MAX_PRES_DIF 1 //Maximum pressure differential between inside/outside
 #define INIT_PRES 20000 // Initial Tank Pressure (kPa)
 #define FILT_PARAM 4 //MA filter parameter, make power of 2 for efficiency
-long  extPres, intPres, temp, curPres, prevPres;
+long  extPres, intPres, temp, curPres, prevPres, roll, pitch, yaw;
 long  tankPres = INIT_PRES;
-
-int roll, pitch, yaw;
-int attitude[] ={roll, pitch, yaw};
 
 ServoTimer2 V_MotPWM, LR_MotPWM, FR_MotPWM;
 
 
 void setup() {
-  lcd.begin(20, 4);
   
   // put your setup code here, to run once:
   RF95_setup();
-  IMU_setup();
-  
+
   pinMode(LED_BUILTIN, OUTPUT);
   
   //setup sensor pins
@@ -129,10 +117,12 @@ void loop() {
   temp = (5.0*analogRead(TEMP)/1023.0 - 1.25)/.005;
   
   tankPres = 1000;
-  attitudeUpdate(attitude);
  
   extPres = 69+50;
   intPres = 50;
+  roll = 69;
+  pitch =420;
+  yaw = 69;
   
   if (count%COMM_INTERVAL == 0){  
     if(!transmitData(temp,TEMP_DATA)){
@@ -151,7 +141,22 @@ void loop() {
       //data did not transmit correctly for some reason
       transmitData(intPres-extPres,PRES_DIFF_DATA); // try one more time
     }
-    delay(500);
+  }
+  
+  if(count%IMU_COMM_INTERVAL == 0){
+    if(!transmitData(roll,ROLL_DATA)){
+      //data did not transmit correctly for some reason
+      transmitData(roll,ROLL_DATA); // try one more time
+    }
+    if(!transmitData(pitch,PITCH_DATA)){
+      //data did not transmit correctly for some reason
+      transmitData(pitch,PITCH_DATA); // try one more time
+    }
+    if(!transmitData(yaw,YAW_DATA)){
+      //data did not transmit correctly for some reason
+      transmitData(yaw,YAW_DATA); // try one more time
+    }
+    
   }
     
   

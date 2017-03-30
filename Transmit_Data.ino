@@ -15,6 +15,15 @@ boolean transmitData(int data, int type ){
     case DEPTH_DATA: // calculated depth
        n = sprintf (radiopacket, "$DEP %d", data);
        break;
+    case ROLL_DATA: // calculated depth
+       n = sprintf (radiopacket, "$ROL %d", data);
+       break;
+    case PITCH_DATA: // calculated depth
+       n = sprintf (radiopacket, "$PIT %d", data);
+       break;
+    case YAW_DATA: // calculated depth
+       n = sprintf (radiopacket, "$YAW %d", data);
+       break;
     
   }
   Serial.println(radiopacket);
