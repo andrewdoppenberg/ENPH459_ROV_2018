@@ -31,11 +31,8 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
 //Telemetry Data types
 #define COMM_INTERVAL 20 //loop interval at which data is sent up
-<<<<<<< HEAD:RF_integration/RF_integration.ino
 #define IMU_COMM_INTERVAL 1 //loop interval at which IMU data is sent up
-=======
-#define IMU_COMM_INTERVAL 1
->>>>>>> refs/remotes/origin/rollpitchyawdisp:RF_integration.ino
+
 #define TEMP_DATA 1
 #define PRES_DIFF_DATA 2
 #define TANK_PRES_DATA 3
@@ -43,10 +40,7 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 #define ROLL_DATA 5
 #define PITCH_DATA 6
 #define YAW_DATA 7
-<<<<<<< HEAD:RF_integration/RF_integration.ino
 
-=======
->>>>>>> refs/remotes/origin/rollpitchyawdisp:RF_integration.ino
 
 #define DEPTH_FACTOR 1 //rho*g
 
