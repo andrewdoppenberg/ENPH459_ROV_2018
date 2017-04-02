@@ -4,7 +4,7 @@ void RF95_setup(){
   digitalWrite(RFM95_RST, HIGH);
  
   if(Serial){
-    Serial.begin(500000);
+    Serial.begin(2000000);
      delay(100);
   }
  

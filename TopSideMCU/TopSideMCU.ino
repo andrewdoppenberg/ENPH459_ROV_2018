@@ -25,10 +25,10 @@ void setup() {
 
 }
 uint8_t lastTmp, lastPrd, lastTpr, lastDep;
-int attitude[] ={0,0,0};
+uint8_t attitude[] ={0,0,0};
 
 int count = 0,lastCount;
-int lastTime =0;
+unsigned long lastTime =0;
 
 void loop() {
   
@@ -37,7 +37,9 @@ void loop() {
     lcd.print("Waiting to Recieve data...");
     
   }
-  if(millis() - lastTime > 1000){
+  else if (count%500==0){lcd.clear();}
+  
+  if(millis() - lastTime > 1000 && !(millis()<lastTime)){
     if((millis() - lastTime)%100 == 0){lcd.clear();}//clear every 100ms        
     lcd.setCursor(0,2);
     lcd.print("Time last:");
@@ -121,7 +123,7 @@ void loop() {
        else if(strcmp( (char*)dataCode,"$ROL" ) == 0){
         lcd.setCursor(0, 0);
         lcd.print("R:     ");
-        attitude[0] = (int) data;
+        attitude[0] =  data;
         lcd.setCursor(2, 0);
 
         }
@@ -130,7 +132,7 @@ void loop() {
       else if(strcmp( (char*)dataCode,"$PIT" ) == 0){
         lcd.setCursor(7, 0);
         lcd.print("P:    ");
-        attitude[1] = (int) data;
+        attitude[1] = data;
         lcd.setCursor(9, 0);
 
         
@@ -138,7 +140,7 @@ void loop() {
       else if(strcmp( (char*)dataCode,"$YAW" ) == 0){        
         lcd.setCursor(13, 0);
         lcd.print("Y:     ");
-        attitude[2] = (int) data;
+        attitude[2] =  data;
         lcd.setCursor(15, 0);
         lcd.print((char*)data);           
                 

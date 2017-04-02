@@ -130,7 +130,7 @@ void loop() {
   tankPres -= ( (curPres - prevPres) - abs(curPres - prevPres) )/2; // calculate new tank pressure on dive (no change on ascent)
   prevPres = curPres;
   */
-  temp = (5.0*analogRead(TEMP)/1023.0 - 1.25)/.005;
+  
   
   tankPres = 1000;
   attitudeUpdate(attitude);
@@ -140,6 +140,7 @@ void loop() {
 
 
   if (count%COMM_INTERVAL == 0){  
+    temp = (5.0*analogRead(TEMP)/1023.0 - 1.25)/.005;
     if(!transmitData(temp,TEMP_DATA)){
       //data did not transmit correctly for some reason
       transmitData(temp,TEMP_DATA); // try one more time
