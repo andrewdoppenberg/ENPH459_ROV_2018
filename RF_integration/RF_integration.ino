@@ -33,11 +33,15 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 #define FR_MOTOR_OUT 6 // Foreward/Reverse control channel
 
 //Telemetry Data types
-#define COMM_INTERVAL 5 //loop interval at which data is sent up
+#define COMM_INTERVAL 20 //loop interval at which data is sent up
+#define IMU_COMM_INTERVAL 1 //loop interval at which IMU data is sent up
 #define TEMP_DATA 1
 #define PRES_DIFF_DATA 2
 #define TANK_PRES_DATA 3
 #define DEPTH_DATA 4
+#define ROLL_DATA 5
+#define PITCH_DATA 6
+#define YAW_DATA 7
 
 
 #define DEPTH_FACTOR 1 //rho*g
@@ -133,25 +137,48 @@ void loop() {
  
   extPres = 69+50;
   intPres = 50;
-  
+
+  //only transmit data on at certain times
   if (count%COMM_INTERVAL == 0){  
     if(!transmitData(temp,TEMP_DATA)){
       //data did not transmit correctly for some reason
       transmitData(temp,TEMP_DATA); // try one more time
     }
+  }
+  else if (count%COMM_INTERVAL == COMM_INTERVAL/4){
     if(!transmitData(extPres*DEPTH_FACTOR,DEPTH_DATA)){
       //data did not transmit correctly for some reason
       transmitData(extPres*DEPTH_FACTOR,DEPTH_DATA); // try one more time
     }
+  }
+  else if (count%COMM_INTERVAL == COMM_INTERVAL/2){
     if(!transmitData(tankPres,TANK_PRES_DATA)){
       //data did not transmit correctly for some reason
       transmitData(tankPres,TANK_PRES_DATA); // try one more time
     }
+  }
+  else if (count%COMM_INTERVAL == 3*COMM_INTERVAL/4){
     if(!transmitData(intPres-extPres,PRES_DIFF_DATA)){
       //data did not transmit correctly for some reason
       transmitData(intPres-extPres,PRES_DIFF_DATA); // try one more time
+    }    
+  }
+
+
+  //we should send IMU data much more frequently than other data
+  if(count%IMU_COMM_INTERVAL == 0){
+    if(!transmitData(roll,ROLL_DATA)){
+      //data did not transmit correctly for some reason
+      transmitData(roll,ROLL_DATA); // try one more time
     }
-    delay(500);
+    if(!transmitData(pitch,PITCH_DATA)){
+      //data did not transmit correctly for some reason
+      transmitData(pitch,PITCH_DATA); // try one more time
+    }
+    if(!transmitData(yaw,YAW_DATA)){
+      //data did not transmit correctly for some reason
+      transmitData(yaw,YAW_DATA); // try one more time
+    }
   }
     
   
