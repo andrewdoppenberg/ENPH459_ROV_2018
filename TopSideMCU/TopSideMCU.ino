@@ -57,7 +57,7 @@ void loop() {
     
     //Print tab delimited Attitude data for reading by computer
     if(Serial){
-      Serial.print(attitude[0]);Serial.print("  ");Serial.print(attitude[1]);Serial.print(" ");Serial.println(attitude[2]);
+      Serial.print(attitude[0]);Serial.print("  ");Serial.print(attitude[1]);Serial.print("  ");Serial.println(attitude[2]);
     }
     
     if (rf95.recv(buf, &len))

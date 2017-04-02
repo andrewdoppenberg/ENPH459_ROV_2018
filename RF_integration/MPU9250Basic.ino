@@ -82,9 +82,9 @@ void attitudeUpdate(int attitude[]) {
 
     myIMU.delt_t = millis() - myIMU.count;
     if (myIMU.delt_t > 500) {
-      attitude[1] = myIMU.roll;
-      attitude[2] = myIMU.pitch;
-      attitude[3] = myIMU.yaw;
+      attitude[0] = myIMU.roll;
+      attitude[1] = myIMU.pitch;
+      attitude[2] = myIMU.yaw;
       digitalWrite(myLed, !digitalRead(myLed));  // toggle led
     }
 }
