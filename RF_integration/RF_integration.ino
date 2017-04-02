@@ -74,8 +74,9 @@ long  tankPres = INIT_PRES;
 
 ServoTimer2 V_MotPWM, LR_MotPWM, FR_MotPWM;
 
-int roll, pitch, yaw;
-int attitude[] ={roll, pitch, yaw};
+long roll,pitch,yaw;
+long attitude[] ={roll, pitch, yaw};
+boolean readIMUData = false;
 
 void setup() {
   
@@ -84,7 +85,7 @@ void setup() {
   //setup IMU
   IMU_setup();
 
-  attitudeUpdate(attitude);
+  attitudeUpdate(attitude,readIMUData);
 
   pinMode(LED_BUILTIN, OUTPUT);
   
@@ -133,8 +134,11 @@ void loop() {
   
   
   tankPres = 1000;
-  attitudeUpdate(attitude);
- 
+  attitudeUpdate(attitude,readIMUData);
+  roll = attitude[0];
+  pitch = attitude[1];
+  yaw = attitude[2];
+  
   extPres = 69+50;
   intPres = 50;
 

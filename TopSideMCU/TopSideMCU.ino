@@ -25,7 +25,7 @@ void setup() {
 
 }
 uint8_t lastTmp, lastPrd, lastTpr, lastDep;
-uint8_t attitude[] ={0,0,0};
+long attitude[] ={0,0,0};
 
 int count = 0,lastCount;
 unsigned long lastTime =0;
@@ -123,24 +123,23 @@ void loop() {
        else if(strcmp( (char*)dataCode,"$ROL" ) == 0){
         lcd.setCursor(0, 0);
         lcd.print("R:     ");
-        attitude[0] =  data;
+        attitude[0] = atoi(data);
         lcd.setCursor(2, 0);
-
+        lcd.print((char*)data);
         }
         
       
       else if(strcmp( (char*)dataCode,"$PIT" ) == 0){
         lcd.setCursor(7, 0);
         lcd.print("P:    ");
-        attitude[1] = data;
+        attitude[1] = atoi(data);
         lcd.setCursor(9, 0);
-
-        
+        lcd.print((char*)data);        
       }
       else if(strcmp( (char*)dataCode,"$YAW" ) == 0){        
         lcd.setCursor(13, 0);
         lcd.print("Y:     ");
-        attitude[2] =  data;
+        attitude[2] =  atoi(data);
         lcd.setCursor(15, 0);
         lcd.print((char*)data);           
                 
