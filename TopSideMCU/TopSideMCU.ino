@@ -27,7 +27,8 @@ void setup() {
 uint8_t lastTmp, lastPrd, lastTpr, lastDep;
 int attitude[] ={0,0,0};
 
-int count = 0;
+int count = 0,lastCount;
+int lastTime =0;
 
 void loop() {
   
@@ -36,9 +37,16 @@ void loop() {
     lcd.print("Waiting to Recieve data...");
     
   }
+  if(millis() - lastTime > 1000){
+    if((millis() - lastTime)%100 == 0){lcd.clear();}//clear every 100ms        
+    lcd.setCursor(0,2);
+    lcd.print("Time last:");
+    lcd.print(millis()-lastTime);    
+   }
   
   if (rf95.available())//true if message availble for us
   {
+    lastTime = millis();
     count++;
     // Should be a message for us now   
     uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
@@ -46,7 +54,9 @@ void loop() {
     uint8_t dataCode[3], data[len-3];
     
     //Print tab delimited Attitude data for reading by computer
-    Serial.print(attitude[0]);Serial.print("  ");Serial.print(attitude[1]);Serial.print(" ");Serial.println(attitude[2]);
+    if(Serial){
+      Serial.print(attitude[0]);Serial.print("  ");Serial.print(attitude[1]);Serial.print(" ");Serial.println(attitude[2]);
+    }
     
     if (rf95.recv(buf, &len))
     {
