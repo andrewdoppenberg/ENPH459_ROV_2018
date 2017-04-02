@@ -30,7 +30,7 @@ boolean transmitData(int data, int type ){
   Serial.println(radiopacket);
   
   rf95.send((uint8_t *)radiopacket, 20); // transmit the data
-  delay(10);
+
   digitalWrite(LED_BUILTIN, LOW);
   if( n > RH_RF95_MAX_MESSAGE_LEN || n < 0){//make sure message is correct length (or if n<0 error occured)
     return false;

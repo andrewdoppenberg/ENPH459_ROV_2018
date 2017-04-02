@@ -32,7 +32,9 @@ int count = 0;
 void loop() {
   
   if(count == 0){
+    lcd.setCursor(0,0);
     lcd.print("Waiting to Recieve data...");
+    
   }
   
   if (rf95.available())//true if message availble for us
@@ -44,12 +46,12 @@ void loop() {
     uint8_t dataCode[3], data[len-3];
     
     //Print tab delimited Attitude data for reading by computer
-    Serial.print(attitude[0]);Serial.print("%t");Serial.print(attitude[1]);Serial.print("%t");Serial.println(attitude[2]);
+    Serial.print(attitude[0]);Serial.print("  ");Serial.print(attitude[1]);Serial.print(" ");Serial.println(attitude[2]);
     
     if (rf95.recv(buf, &len))
     {
       digitalWrite(LED_BUILTIN, HIGH);
-      RH_RF95::printBuffer("Received: ", buf, len);
+      //RH_RF95::printBuffer("Received: ", buf, len);
       lcd.setCursor(11,4);
       lcd.print("RSSI:");
       lcd.setCursor(17,4);
@@ -105,37 +107,25 @@ void loop() {
           lastDep = (int)data; 
         }
       }
-<<<<<<< HEAD:TopSideMCU/TopSideMCU.ino
+
        else if(strcmp( (char*)dataCode,"$ROL" ) == 0){
         lcd.setCursor(0, 0);
         lcd.print("R:     ");
         attitude[0] = (int) data;
         lcd.setCursor(2, 0);
-=======
-      else if(strcmp( (char*)dataCode,"$ROL" ) == 0){
-        lcd.setCursor(0, 0);
-        lcd.print("ROL:");
-        lcd.setCursor(4, 0);
->>>>>>> refs/remotes/origin/rollpitchyawdisp:TopSideMCU.ino
-        lcd.print((char*)data);   
+
         }
         
       
       else if(strcmp( (char*)dataCode,"$PIT" ) == 0){
         lcd.setCursor(7, 0);
-<<<<<<< HEAD:TopSideMCU/TopSideMCU.ino
         lcd.print("P:    ");
         attitude[1] = (int) data;
         lcd.setCursor(9, 0);
-=======
-        lcd.print("PIT:");
-        lcd.setCursor(11, 0);
->>>>>>> refs/remotes/origin/rollpitchyawdisp:TopSideMCU.ino
-        lcd.print((char*)data);   
+
         
       }
       else if(strcmp( (char*)dataCode,"$YAW" ) == 0){        
-<<<<<<< HEAD:TopSideMCU/TopSideMCU.ino
         lcd.setCursor(13, 0);
         lcd.print("Y:     ");
         attitude[2] = (int) data;
@@ -143,15 +133,10 @@ void loop() {
         lcd.print((char*)data);           
                 
       }
-      
-=======
-        lcd.setCursor(14, 0);
-        lcd.print("YAW:");
-        lcd.setCursor(17, 0);
-        lcd.print((char*)data);           
+          
                 
       }
->>>>>>> refs/remotes/origin/rollpitchyawdisp:TopSideMCU.ino
+
       else{
         //unable to parse properly
         lcd.print("Unable to Parse Data: ");
@@ -164,10 +149,7 @@ void loop() {
         
       
     
-    else
-    {
-      lcd.print("Receive failed");
-    }
+    
     
     digitalWrite(LED_BUILTIN, LOW);
   }
@@ -177,4 +159,4 @@ void loop() {
 
   
   
-}
+
