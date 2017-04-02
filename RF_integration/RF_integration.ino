@@ -6,6 +6,8 @@
 #include <SPI.h>
 #include <RH_RF95.h>
 #include <ServoTimer2.h>
+#include "quaternionFilters.h"
+#include "MPU9250.h"
 
 
 
@@ -44,7 +46,11 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
 #define DEPTH_FACTOR 1 //rho*g
 
-
+// Pin definitions for IMU
+ int intPin = 12;  // These can be changed, 2 and 3 are the Arduinos ext int pins
+ int myLed  = 13;  // Set up pin 13 led for toggling
+ 
+ MPU9250 myIMU;
 
 //State of input pin of interrupts
 volatile byte stateVmot, stateLRmot, stateFRmot;
@@ -63,16 +69,22 @@ volatile long int prevTimeVMot, prevTimeLRMot, prevTimeFRMot;
 #define MAX_PRES_DIF 1 //Maximum pressure differential between inside/outside
 #define INIT_PRES 20000 // Initial Tank Pressure (kPa)
 #define FILT_PARAM 4 //MA filter parameter, make power of 2 for efficiency
-long  extPres, intPres, temp, curPres, prevPres, roll, pitch, yaw;
+long  extPres, intPres, temp, curPres, prevPres;
 long  tankPres = INIT_PRES;
 
 ServoTimer2 V_MotPWM, LR_MotPWM, FR_MotPWM;
 
+int roll, pitch, yaw;
+int attitude[] ={roll, pitch, yaw};
 
 void setup() {
   
-  // put your setup code here, to run once:
+ //setup the radio transciever
   RF95_setup();
+  //setup IMU
+  IMU_setup();
+
+  attitudeUpdate(attitude);
 
   pinMode(LED_BUILTIN, OUTPUT);
   
@@ -99,7 +111,9 @@ void setup() {
   stateLRmot = digitalRead(LR_MOTOR_IN);
   stateFRmot = digitalRead(FR_MOTOR_IN);
 }
+
 int count = 0;
+
 void loop() {
 
   count++; // loop counter
@@ -119,6 +133,7 @@ void loop() {
   temp = (5.0*analogRead(TEMP)/1023.0 - 1.25)/.005;
   
   tankPres = 1000;
+  attitudeUpdate(attitude);
  
   extPres = 69+50;
   intPres = 50;
@@ -177,6 +192,6 @@ void loop() {
 
 
 
-}
+
 
 
