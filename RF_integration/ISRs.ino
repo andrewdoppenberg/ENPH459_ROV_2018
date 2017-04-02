@@ -1,3 +1,14 @@
+// Interrupt Service Routines
+// These are for reading the PWM signal from the RC reciever
+// and for outputting a new PWM signal to the motor drivers.
+// If automatic control of motors is desired, you'll have to 
+// detach the interrupt for that motor before doing so. 
+// i.e. detachInterrupt(digitalPinToInterrupt(V_MOTOR_IN));
+// to detach the vertical motor interrupt. Remember to reattach
+// the intterrupt afterwards, otherwise you'll lose 
+// manual control!
+
+//vertical motor control
 void ISR_vMot(){
   stateVmot = !stateVmot;
   //Could direcly change the port if digital write is too slow
@@ -16,7 +27,7 @@ void ISR_vMot(){
 }
 
 
-
+//left-right motor control
 void ISR_lrMot(){
   stateLRmot = !stateLRmot;
   //Could direcly change the port if digital write is too slow
@@ -33,7 +44,7 @@ void ISR_lrMot(){
     prevTimeLRMot = micros();
   }
 }
-
+//forward-reverse motor control
 void ISR_frMot(){
    stateFRmot = !stateFRmot;
   //Could direcly change the port if digital write is too slow

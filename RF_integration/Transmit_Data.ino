@@ -24,7 +24,10 @@ boolean transmitData(int data, int type ){
     case YAW_DATA: // calculated depth
        n = sprintf (radiopacket, "$YAW %d", data);
        break;
+<<<<<<< HEAD:RF_integration/Transmit_Data.ino
        
+=======
+>>>>>>> refs/remotes/origin/rollpitchyawdisp:Transmit_Data.ino
     
   }
   Serial.println(radiopacket);
