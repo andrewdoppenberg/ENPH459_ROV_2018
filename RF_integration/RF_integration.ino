@@ -128,15 +128,8 @@ void loop() {
  
   extPres = 69+50;
   intPres = 50;
-<<<<<<< HEAD:RF_integration/RF_integration.ino
 
-  //only transmit data on at certain times
-=======
-  roll = 69;
-  pitch =420;
-  yaw = 69;
-  
->>>>>>> refs/remotes/origin/rollpitchyawdisp:RF_integration.ino
+
   if (count%COMM_INTERVAL == 0){  
     if(!transmitData(temp,TEMP_DATA)){
       //data did not transmit correctly for some reason
@@ -177,25 +170,10 @@ void loop() {
       //data did not transmit correctly for some reason
       transmitData(yaw,YAW_DATA); // try one more time
     }
-<<<<<<< HEAD:RF_integration/RF_integration.ino
-=======
+
   }
   
-  if(count%IMU_COMM_INTERVAL == 0){
-    if(!transmitData(roll,ROLL_DATA)){
-      //data did not transmit correctly for some reason
-      transmitData(roll,ROLL_DATA); // try one more time
-    }
-    if(!transmitData(pitch,PITCH_DATA)){
-      //data did not transmit correctly for some reason
-      transmitData(pitch,PITCH_DATA); // try one more time
-    }
-    if(!transmitData(yaw,YAW_DATA)){
-      //data did not transmit correctly for some reason
-      transmitData(yaw,YAW_DATA); // try one more time
-    }
-    
->>>>>>> refs/remotes/origin/rollpitchyawdisp:RF_integration.ino
+
   }
     
   
