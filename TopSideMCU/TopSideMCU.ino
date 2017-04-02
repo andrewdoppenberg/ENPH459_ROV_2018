@@ -25,10 +25,17 @@ void setup() {
 
 }
 uint8_t lastTmp, lastPrd, lastTpr, lastDep;
+int attitude[] ={0,0,0};
+
 int count = 0;
+
 void loop() {
   
-  if (rf95.available())
+  if(count == 0){
+    lcd.print("Waiting to Recieve data...");
+  }
+  
+  if (rf95.available())//true if message availble for us
   {
     count++;
     // Should be a message for us now   
@@ -36,22 +43,18 @@ void loop() {
     uint8_t len = sizeof(buf);
     uint8_t dataCode[3], data[len-3];
     
-    
+    //Print tab delimited Attitude data for reading by computer
+    Serial.print(attitude[0]);Serial.print("%t");Serial.print(attitude[1]);Serial.print("%t");Serial.println(attitude[2]);
     
     if (rf95.recv(buf, &len))
     {
       digitalWrite(LED_BUILTIN, HIGH);
       RH_RF95::printBuffer("Received: ", buf, len);
-      //lcd.print("Got: ");
-      //lcd.println((char*)buf);
       lcd.setCursor(11,4);
       lcd.print("RSSI:");
       lcd.setCursor(17,4);
-      lcd.print(rf95.lastRssi(), DEC);
-      
-      //lcd.println(count);
-
-      
+      lcd.print(rf95.lastRssi(), DEC); //display signal strength
+          
       
       
       
@@ -102,6 +105,32 @@ void loop() {
           lastDep = (int)data; 
         }
       }
+       else if(strcmp( (char*)dataCode,"$ROL" ) == 0){
+        lcd.setCursor(0, 0);
+        lcd.print("R:     ");
+        attitude[0] = (int) data;
+        lcd.setCursor(2, 0);
+        lcd.print((char*)data);   
+        }
+        
+      
+      else if(strcmp( (char*)dataCode,"$PIT" ) == 0){
+        lcd.setCursor(7, 0);
+        lcd.print("P:    ");
+        attitude[1] = (int) data;
+        lcd.setCursor(9, 0);
+        lcd.print((char*)data);   
+        
+      }
+      else if(strcmp( (char*)dataCode,"$YAW" ) == 0){        
+        lcd.setCursor(13, 0);
+        lcd.print("Y:     ");
+        attitude[2] = (int) data;
+        lcd.setCursor(15, 0);
+        lcd.print((char*)data);           
+                
+      }
+      
       else{
         //unable to parse properly
         lcd.print("Unable to Parse Data: ");
@@ -117,7 +146,7 @@ void loop() {
     {
       lcd.print("Receive failed");
     }
-    //lcd.print();//line between messages
+    
     digitalWrite(LED_BUILTIN, LOW);
   }
  
