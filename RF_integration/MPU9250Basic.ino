@@ -41,6 +41,7 @@ void attitudeUpdate(long attitude[], boolean readIMUData) {
   {
     if (myIMU.readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01)
     {
+      
       myIMU.readAccelData(myIMU.accelCount);  // Read the x/y/z adc values
 
       // Now we'll calculate the accleration value into actual g's
@@ -48,9 +49,9 @@ void attitudeUpdate(long attitude[], boolean readIMUData) {
       myIMU.ax = (float)myIMU.accelCount[0] * myIMU.aRes; // - myIMU.accelBias[0];
       myIMU.ay = (float)myIMU.accelCount[1] * myIMU.aRes; // - myIMU.accelBias[1];
       myIMU.az = (float)myIMU.accelCount[2] * myIMU.aRes; // - myIMU.accelBias[2];
-
+      
       myIMU.readGyroData(myIMU.gyroCount);  // Read the x/y/z adc values
-
+    
       // Calculate the gyro value into actual degrees per second
       // This depends on scale being set
       myIMU.gx = (float)myIMU.gyroCount[0] * myIMU.gRes;
@@ -142,10 +143,8 @@ void attitudeUpdate(long attitude[], boolean readIMUData) {
       myIMU.pitch *= RAD_TO_DEG;
       myIMU.yaw   *= RAD_TO_DEG;
 
-      // Declination of SparkFun Electronics (40°05'26.6"N 105°11'05.9"W) is
-      //   8° 30' E  ± 0° 21' (or 8.5°) on 2016-07-19
-      // - http://www.ngdc.noaa.gov/geomag-web/#declination
-      myIMU.yaw  -= 8.5;
+      // Declination of vancouver
+      myIMU.yaw  += 16;
       myIMU.roll *= RAD_TO_DEG;
 
       if(SerialDebug)
