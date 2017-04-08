@@ -3,7 +3,8 @@
 // command to the pilot.
 void pesFailureABORT(){
   // ascend until pressure equalizes
-  while(analogRead(EXT_PRES)- analogRead(INT_PRES) > MAX_PRES_DIF){
+  timeout = millis();
+  while(analogRead(EXT_PRES)- analogRead(INT_PRES) > MAX_PRES_DIF || millis() - timeout > 3000){
     //disable interrupts from RC handset
      detachInterrupt(digitalPinToInterrupt(V_MOTOR_IN));
     // Run vertical motor in reverse 
@@ -11,6 +12,7 @@ void pesFailureABORT(){
   }
   //relinquish command to user
   attachInterrupt(digitalPinToInterrupt(V_MOTOR_IN), ISR_vMot, CHANGE);
+  
   
 }
 

@@ -32,7 +32,7 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 #define FR_MOTOR_OUT 6 // Foreward/Reverse control channel
 
 //Telemetry Data types
-#define COMM_INTERVAL 700 //loop interval at which data is sent up
+#define COMM_INTERVAL 500 //loop interval at which data is sent up
 #define IMU_COMM_INTERVAL 50 //loop interval at which IMU data is sent up
 
 #define TEMP_DATA 1
