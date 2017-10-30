@@ -1,15 +1,16 @@
-void RF95_setup(){
+void RF95_setup()
+{
   // Set up RFM95 chip
   pinMode(RFM95_RST, OUTPUT);
   digitalWrite(RFM95_RST, HIGH);
- 
+
   if(Serial){
     Serial.begin(2000000);
      delay(100);
   }
- 
+
   lcd.print("Arduino LoRa TX Test!");
- 
+
   // manual reset
   digitalWrite(RFM95_RST, LOW);
   delay(10);
@@ -36,7 +37,3 @@ void RF95_setup(){
   // you can set transmitter powers from 5 to 23 dBm:
   rf95.setTxPower(23, false);
 }
- 
-
-
-
