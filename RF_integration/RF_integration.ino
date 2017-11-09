@@ -1,5 +1,3 @@
-
-
 // Date: Jan. 24
 // Purpose: incorporating RF95 COMMS with other ROV functions
 
@@ -8,8 +6,6 @@
 #include <ServoTimer2.h>
 #include "quaternionFilters.h"
 #include "MPU9250.h"
-
-
 
 #define RFM95_CS 53 // Chip Select pin
 #define RFM95_RST 47 // Reset Pin
@@ -118,7 +114,7 @@ int count = 0;
 void loop() {
 
   count++; // loop counter
-/*
+  /*
   //Poll sensors
   extPres = analogRead(EXT_PRES); //need to add scaling factors
   intPres = analogRead(INT_PRES);
@@ -132,7 +128,6 @@ void loop() {
   prevPres = curPres;
   */
   
-  
   tankPres = 1000;
   attitudeUpdate(attitude,readIMUData);
   roll = attitude[0];
@@ -142,8 +137,7 @@ void loop() {
   extPres = 69+50;
   intPres = 50;
 
-
-  if (count%COMM_INTERVAL == 0){  
+  if (count % COMM_INTERVAL == 0){  
     temp = (5.0*analogRead(TEMP)/1023.0 - 1.25)/.005;
     if(!transmitData(temp,TEMP_DATA)){
       //data did not transmit correctly for some reason
@@ -169,9 +163,8 @@ void loop() {
     }    
   }
 
-
   //we should send IMU data much more frequently than other data
-  if(count%IMU_COMM_INTERVAL == 0){
+  if(count % IMU_COMM_INTERVAL == 0){
     if(!transmitData(roll,ROLL_DATA)){
       //data did not transmit correctly for some reason
       transmitData(roll,ROLL_DATA); // try one more time
@@ -184,11 +177,8 @@ void loop() {
       //data did not transmit correctly for some reason
       transmitData(yaw,YAW_DATA); // try one more time
     }
-
   }
-  
-
-  }
+}
     
   
 
